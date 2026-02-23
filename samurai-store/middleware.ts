@@ -58,6 +58,16 @@ export async function middleware(request: NextRequest) {
 // ログインページへリダイレクト
 function redirectToLogin(request: NextRequest) {
   const loginUrl = new URL('/login', request.url);
-  loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
+  const redirectPath = request.nextUrl.pathname + request.nextUrl.search; // ← 変更
+  loginUrl.searchParams.set('redirect', redirectPath);
   return NextResponse.redirect(loginUrl);
 }
+
+// ミドルウェアを適用するパスの設定
+export const config = {
+  matcher: [
+    '/account/:path*',
+    '/order-confirm',
+    '/admin/:path*',
+  ],
+};
